@@ -2,7 +2,7 @@
 import logging
 import os
 from voter import voter
-from alert import ali_sms_alert, level
+from alert import level
 from monitor.scheduler.scheduler import Scheduler
 from monitor.strategy.simple_strategy import SimpleStrategy
 

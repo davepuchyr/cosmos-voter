@@ -1,9 +1,9 @@
 import strategy
 import voter
-from alert import ali_sms_alert
 from alert.level import Level
 from voter import voter
 import logging
+import os
 
 log = logging.getLogger(__name__)
 
@@ -14,12 +14,12 @@ class SimpleStrategy(strategy.Strategy):
     # config from yaml
     def __init__(self, config):
         self.config = config
-        self.alert = ali_sms_alert.buildAliSmsAlertFromConfig(config)
+        self.alert = "dmjp"
         self.currentLevel = Level.EARTH
         self.des = config["strategy"]["simple_strategy"]["des"]
-        self.cosmos_addr = config["strategy"]["simple_strategy"]["cosmos_addr"]
-        self.passphrase = config["strategy"]["simple_strategy"]["passphrase"]
-        self.from_key = config["strategy"]["simple_strategy"]["from_key"]
+        self.cosmos_addr = os.environ.get( "GAIAD_ADDRRESS" )
+        self.passphrase = os.environ.get( "GAIAD_PASSWORD" )
+        self.from_key = os.environ.get( "GAIAD_FROM" )
         if "node" in config["strategy"]["simple_strategy"].keys():
             self.node = config["strategy"]["simple_strategy"]["node"]
         else:
@@ -67,13 +67,9 @@ class SimpleStrategy(strategy.Strategy):
                     log.warn("can not query certain vote, "
                              + "check whether it is in voting period")
                     try:
-                        vote_result = voter.query_votes(proposal_id,
-                                                        node=self.node)
-                        if vote_result
-                        .startswith('Proposal not in voting period'):
-                            log.info(
-                                'proposal %d is not in voting period'
-                                % proposal_id)
+                        vote_result = voter.query_votes(proposal_id, node=self.node)
+                        if vote_result.startswith('Proposal not in voting period'):
+                            log.info( 'proposal %d is not in voting period' % proposal_id)
                         else:
                             # there is a pending vote
                             self.currentLevel = Level.SUN
@@ -100,5 +96,5 @@ class SimpleStrategy(strategy.Strategy):
         new_last_proposal_id = max(proposals.keys())
         for proposal_id in range(self.last_proposal_id,
                                  new_last_proposal_id):
-            voter.vote(self.from_key, "No", proposal_id, self.passphrase,
+            voter.vote(self.from_key, "Abstain", proposal_id, self.passphrase,
                        node=self.node)

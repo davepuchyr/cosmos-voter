@@ -8,9 +8,9 @@ alert:
 strategy:
   simple_strategy:
     des: "13000000000" # what phone shall send sms to
-    cosmos_addr: "cosmosaccaddr12312312390129301239yv" # cosmos key addr to vote
-    passphrase: "12345678" # passphrase of the key
-    from_key: "cosmos-key" # name of the key to vote
+    cosmos_addr: "GAIAD_ADDRRESS" # cosmos key addr to vote
+    passphrase: "GAIAD_PASSWORD" # passphrase of the key
+    from_key: "GAIAD_FROM" # name of the key to vote
     node: "127.0.0.1:26657" # if gaiad is not set locally, the query node should be set
 
 scheduler:
